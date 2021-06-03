@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-#define MENU_ITEM_LEN 11
+#define MENU_ITEM_LEN 12
 
 
 typedef struct ListNode{
@@ -327,6 +327,26 @@ void node_get_middle(){
 
 }
 
+
+void node_remove_duplicate() {
+	Node *current = head;
+	if (current == NULL)
+        return; // do nothing if the list is empty
+
+    // Compare current node with next node
+    while(current->next!=NULL) {
+        if (current->data == current->next->data)
+        {
+            struct node* nextNext = current->next->next;
+            free(current->next);
+            current->next = nextNext;
+        } else {
+            current = current->next; // only advance if no deletion
+        }
+    }
+}
+
+
 void node_seg_even_odd() {
 
     Node *left_head=NULL,*right_head=NULL,*temp=head,*left_ptr=NULL,*right_ptr=NULL;
@@ -401,7 +421,8 @@ void (*op_fun[])()={node_generate,
                     node_print_reverse,
                     node_sort,
                     node_get_middle,
-                    node_seg_even_odd};
+                    node_seg_even_odd,
+                    node_remove_duplicate};
 
 while(choice != MENU_ITEM_LEN+1) {
     i=0;
@@ -417,6 +438,7 @@ while(choice != MENU_ITEM_LEN+1) {
     printf("%d. Sort \n",i++);
     printf("%d. Get Middle \n",i++);
     printf("%d. Segregate Even and Odd \n",i++);
+    printf("%d. Remove Duplicates \n",i++);
     printf("%d. End\n\n\n",i++);
 
     scanf("%d",&choice);
