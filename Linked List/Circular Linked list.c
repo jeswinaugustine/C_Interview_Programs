@@ -3,7 +3,6 @@
 typedef struct CLLNODE {
     int data;
     struct CLLNODE *next;
-    struct CLLNODE *prev;
 } CLLNode;
 
 CLLNode *head;
@@ -19,21 +18,25 @@ void CLLInsert(int data,int pos) {
         printf("Allocation Error !");
         return;
     }
+
     new_node->data = data;
 
     if (pos == 1) {
-        new_node->next = head;
-        new_node->prev = NULL;
-        if(head) {
-            head->prev = new_node;
-
+        new_node->next = current;
+        if(current != NULL) {
+            while(current->next != head) {
+                current=current->next;
+            }
+            current->next=new_node;
+        } else {
+            new_node->next=new_node;
         }
         head = new_node;
         printf("%d inserted in %d!\n",data,pos);
         return;
     }
 
-    while ( (i<pos-1) && (current->next != NULL)) {
+    while ( (i<pos-1) && (current->next != head)) {
         current = current->next;
         i++;
     }
@@ -45,43 +48,49 @@ void CLLInsert(int data,int pos) {
     }
 
     new_node->next=current->next;
-    new_node->prev=current;
-    if(current->next)
-        current->next->prev = new_node;
     current->next = new_node;
     printf("%d inserted in %d!\n",data,pos);
+
     return;
 
 }
 
 void CLLDelete(int pos) {
-    CLLNode *current=head, *new_node;
+    CLLNode *prev, *del_node=head;
     int i=1;
     if(head==NULL) {
         printf("List is empty \n");
         return;
     }
-    if(pos == 1) {
-        head=head->next;
-        if(head!=NULL){
-            head->prev == NULL;
+
+    if (pos == 1) {
+        del_node = head;
+        prev=head;
+        while(prev->next != del_node) {
+            prev=prev->next;
         }
-        free(current);
+        head = del_node->next;
+        prev->next=head;
+        free(del_node);
+        del_node=NULL;
         return;
     }
-    while(i<pos && (current!=NULL)) {
+
+    while( (i<pos-1) && (del_node->next != head)) {
         i++;
-        current=current->next;
+        prev=del_node;
+        del_node=del_node->next;
     }
-    if(i!=pos){
+
+    if(i!=pos-1){
         printf("invalid pos !\n");
         return;
     }
-    current->prev->next = current->next;
-    if(current->next)
-        current->next->prev= current->prev;
-    printf("%d from %d position \n",current->data,pos);
-    free(current);
+    prev->next = del_node->next;
+
+    printf("%d from %d position \n",del_node->data,pos);
+    free(del_node);
+
     return;
 }
 
@@ -93,10 +102,11 @@ void CLLDisplay(){
         return;
     }
     do {
-        printf("%d <-> ",current->data);
+        printf("%d -> ",current->data);
         current=current->next;
     }
     while(current != head);
+    printf(" | \n");
     return;
 }
 
