@@ -17,10 +17,30 @@ tnode_t* new_node(int value) {
 }
 
 void inorder(tnode_t *node) {
+
     if(node != NULL) {
         inorder(node->left);
         printf(" %d",node->data);
         inorder(node->right);
+    }
+}
+
+
+void preorder(tnode_t *node) {
+
+    if(node != NULL) {
+        printf(" %d",node->data);
+        inorder(node->left);
+        inorder(node->right);
+    }
+}
+
+void postorder(tnode_t *node) {
+
+    if(node != NULL) {
+        inorder(node->left);
+        inorder(node->right);
+        printf(" %d",node->data);
     }
 }
 
@@ -52,7 +72,14 @@ int main()
     insert(root,10);
     insert(root,70);
 
+    printf(" \n Pre-order \n");
     inorder(root);
+
+    printf(" \n InOrder \n");
+    inorder(root);
+
+    printf(" \n Post-order \n");
+    postorder(root);
 
     return 0;
 }
